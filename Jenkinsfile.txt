@@ -1,0 +1,30 @@
+import groovy.json.JsonSluperClassic
+
+def jsonParse(def json){
+	new groovy.json.JsonSluperClassic().parseText(json)
+}
+pipeline{
+	agent { label 'master' } /*le dice al jenkins donde debe ejecutarse*/
+	enviroment {
+		appName="variable" /**enviroment variales de entorno*/
+	}
+	stages{/*fases*/
+		stage("paso 1"){
+			script{
+				sh "echo 'hola mundo'"/*tareas que debe desarrollar*/
+			}
+		}
+	}
+	post{/*siempre se ejecuta al finalizar el pathline esat el siempre que termina la tarea el success cuando todo es ok y el failure cuando falla algo*/
+		always{
+			deleteDir()
+			sh "echo 'fase always'"
+		}
+		success{
+			sh "echo 'fase success'"
+		}
+		failure{
+			sh "echo 'fase failure'"
+		}
+	}
+}
